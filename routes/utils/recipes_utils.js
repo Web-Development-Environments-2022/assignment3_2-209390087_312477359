@@ -37,9 +37,55 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
+async function getRandomRecipes() {
+    // TODO fetch random recipes from Spooncaular API
+    let randoms = [] 
+            number = 3
+            randoms = await axios.get(`${api_domain}/random`, {
+                params: {
+                    apiKey: process.env.spooncular_apiKey,
+                    number: number
+                }
+            })
+        let res = []
+        for (let i = 0; i< randoms.data["recipes"].length; i++){
+            res.push(await getRecipeDetails( randoms.data["recipes"][i].id))
+        }  
+        return ShowRecipe(res)
 
 
+}
+
+function ShowRecipe(recipes) {
+return recipes.map((recipe) => {
+        const {
+            id,
+            title,
+            readyInMinutes,
+            aggregateLikes,
+            servings,
+            vegetarian,
+            vegan,
+            glutenFree,
+            image,
+        } = recipe;
+        return {
+            id: id,
+            title: title,
+            ready_in_minutes: readyInMinutes,
+            aggregate_likes: aggregateLikes,
+            serving: servings,
+            vegetarian: vegetarian,
+            vegan: vegan,
+            gluten_free: glutenFree,
+            image: image,
+        }
+    }
+);
+}
 exports.getRecipeDetails = getRecipeDetails;
+exports.getRandomRecipes = getRandomRecipes;
+exports.ShowRecipe = ShowRecipe;
 
 
 
