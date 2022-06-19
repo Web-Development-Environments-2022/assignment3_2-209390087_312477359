@@ -83,7 +83,60 @@ return recipes.map((recipe) => {
     }
 );
 }
+
+async function getRecipePreview(recipe_id) {
+    let recipe_info = await getRecipeInformation(recipe_id);
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+
+    return {
+        id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+        
+    }
+}
+
+async function getAllRecipesPreview(ids) {
+    let results = []
+    for (let i = 0; i < ids.length; i++) {
+        let preview= await getRecipePreview(recipes_id[i]);
+        results.push(preview)
+    }
+    return results
+}
+
+
+async function searchRecipes(req, query, number, cuisine, diet, intolerances) {
+    let res = await axios.get(`${api_domain}/complexSearch`,
+    {
+        params: {
+            apiKey: process.env.spooncular_apiKey,
+            query: query, 
+            number: number,
+            cuisine: cuisine, 
+            diet: diet,
+            intolerances: intolerances,
+            instructionsRequired: true,
+            addRecipeInformation: true,
+        },
+    })
+
+    
+    return res.data
+
+}
+
+
+
 exports.getRecipeDetails = getRecipeDetails;
+exports.searchRecipes= searchRecipes;
+exports.getRecipePreview=getRecipePreview;
+exports.getAllRecipesPreview=getAllRecipesPreview;
 exports.getRandomRecipes = getRandomRecipes;
 exports.ShowRecipe = ShowRecipe;
 

@@ -28,4 +28,19 @@ router.get("/random", async (req,res, next) => {
     next(error);
   }
 });
+
+router.get("/search", async (req, res, next) => {
+  try {
+    const query = req.query.query;
+    const number = req.query.number;
+    const cuisine = req.query.cuisine;
+    const diet = req.query.diet;
+    const intolerances = req.query.intolerances;
+
+    const recipes = await recipes_utils.searchRecipes(req, query, number, cuisine, diet, intolerances);
+    res.send(recipes);
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;

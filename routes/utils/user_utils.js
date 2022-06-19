@@ -1,5 +1,7 @@
 const DButils = require("./DButils");
 
+var id = 1;
+
 async function markAsFavorite(user_id, recipe_id){
     await DButils.execQuery(`insert into FavoriteRecipes values ('${user_id}',${recipe_id})`);
 }
@@ -9,13 +11,26 @@ async function getFavoriteRecipes(user_id){
     return recipes_id;
 }
 
+async function markAsWatched(user_id, recipe_id){
+    await DButils.execQuery(`insert into watchedrecipes values('${user_id}',${recipe_id})`);
+
+}
+
+async function getWatchedRecipes(user_id){
+    const recipes_id = await DButils.execQuery(`select recipe_id from watchedrecipes where user_id='${user_id}' ORDER BY currtime DESC LIMIT 3`);
+    return recipes_id;
+}
+
+
 //add personal recipe:
-async function addNEwRecipe(title,image,popularity,glutenFree,vegan,vegetarian,servings,recipeOwner,ready_in_minutes,number_of_servings,FamilyRecipe,PersonalRecipe,instructions,extended_ingredients){
-    if(title==undefined || image==undefined || popularity==undefined || glutenFree==undefined || vegan==undefined || vegetarian==undefined || servings==undefined || recipeOwner==undefined || ready_in_minutes==undefined || number_of_servings==undefined || FamilyRecipe==undefined  || PersonalRecipe==undefined  || instructions==undefined  || extended_ingredients==undefined ){
+async function addNEwRecipe(title,image,popularity,glutenFree,vegan,vegetarian,servings,recipeOwner,ready_in_minutes,user_id,number_of_servings,FamilyRecipe,PersonalRecipe,instructions,extended_ingredients){
+
+    if(title==undefined || image==undefined || popularity==undefined || glutenFree==undefined || vegan==undefined || vegetarian==undefined || servings==undefined || recipeOwner==undefined || ready_in_minutes==undefined  || number_of_servings==undefined  || instructions==undefined  || extended_ingredients==undefined ){
         throw { status: 422, message: "There is a Missing Value!" }; 
     }
     else{
-        await DButils.execQuery(`insert into mydb.recipe values ('${title}','${image}','${popularity}','${glutenFree}','${vegan}','${vegetarian}','${servings}','${recipeOwner}','${ready_in_minutes}','${number_of_servings}','${FamilyRecipe}','${PersonalRecipe}','${instructions}','${extended_ingredients}')`);
+       id++;
+        await DButils.execQuery(`insert into mydb.recipe values ('${++id}','${id}','${title}','${image}','${popularity}','${glutenFree}','${vegan}','${vegetarian}','${servings}','${recipeOwner}','${ready_in_minutes}','${user_id}' ,'${number_of_servings}','${FamilyRecipe}','${PersonalRecipe}','${instructions}','${extended_ingredients}')`);
     }
 }
 async function getPersonalRecipes(user_id,PersonalRecipe){
@@ -28,6 +43,10 @@ async function getFamilyRecipes(user_id,FamilyRecipe){
     return recipes_id;
 }
 
+async function get3LastWatched(user_id){
+    const recipes_id = await DButils.execQuery(`select recipe_id from WatchedRecipes where user_id='${user_id}' ORDER BY watched_date DESC LIMIT 3`);
+    return recipes_id;
+}
 
 //add recipe to family recipes-get
 
@@ -35,3 +54,9 @@ async function getFamilyRecipes(user_id,FamilyRecipe){
 
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
+exports.markAsWatched=markAsWatched;
+exports.getWatchedRecipes=getWatchedRecipes;
+exports.addNEwRecipe=addNEwRecipe;
+exports.get3LastWatched=get3LastWatched;
+exports.getFamilyRecipes=getFamilyRecipes;
+exports.getPersonalRecipes=getPersonalRecipes;
