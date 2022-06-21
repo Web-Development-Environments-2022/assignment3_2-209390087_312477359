@@ -107,28 +107,39 @@ router.post('/family', async (req,res,next) => {
     const servings = req.body.servings;
     const recipeOwner = req.body.recipeOwner;
     const ready_in_minutes = req.body.ready_in_minutes;
+    const WhenPrepared = req.body.WhenPrepared;
    // const number_of_servings = req.body.number_of_servings;
     const FamilyRecipe = 1;
     const PersonalRecipe = 0;
     const instructions = req.body.instructions;
     const extended_ingredients = req.body.extended_ingredients;
-    await user_utils.addNEwRecipe(title,image,popularity,glutenFree,vegan,vegetarian,servings,recipeOwner,ready_in_minutes,user_id,FamilyRecipe,PersonalRecipe,instructions,extended_ingredients);
+    await user_utils.addNEwRecipe(title,image,popularity,glutenFree,vegan,vegetarian,servings,recipeOwner,ready_in_minutes,user_id,FamilyRecipe,PersonalRecipe,instructions,extended_ingredients,WhenPrepared);
     res.status(200).send("The Recipe successfully saved as family recipe!");
     } catch(error){
     next(error);
   }
 })
-
+//tested
 router.get('/family', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
 
     const recipes_id = await user_utils.getFamilyRecipes(user_id,1);
+    console.log(recipes_id)
+    console.log("recipes_id")
+    let ans = await user_utils.returnFamilyRecipes(recipes_id);
+    console.log(ans)
+    console.log("ans")
     // const my_recipes = recipes_id;
-    let recipes_id_array = [];
-    recipes_id.map((element) => recipes_id_array.push(element.id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipePreview(recipes_id_array);
-    res.status(200).send(results);
+  //   let recipes_id_array = [];
+  //   recipes_id.map((element) => recipes_id_array.push(element.id)); //extracting the recipe ids into array
+  //   //const results = await recipe_utils.getFamilyRecipes(recipes_id_array);
+  //   for (let i =0; i<recipes_id_array.length; i++){
+
+  //   }
+  //     return await DButils.execQuery(query);
+  // }
+    res.status(200).send(ans);
   } catch(error){
     next(error); 
   }
@@ -144,20 +155,6 @@ router.post('/watched', async (req,res,next) => { //works
     next(error);
   }
 })
-/**
- * This path returns the visited recipes that were saved by the logged-in user
- */
-//  router.get('/watched', async (req,res,next) => {
-//   try{
-//     const user_id = req.session.user_id;
-//     const recipes_id = await user_utils.getWatchedRecipes(user_id);
-//     let recipes_array = [];
-//     recipes_id.map((element) => recipes_array.push(element.recipe_id)); // recipe ids to array
-//     res.status(200).send("succuess");
-//   } catch(error){
-//     next(error); 
-//   }
-// });
 
 router.get('/watched', async (req,res,next) => {
   try{

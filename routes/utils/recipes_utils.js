@@ -51,6 +51,7 @@ async function getRandomRecipes() {
         for (let i = 0; i< randoms.data["recipes"].length; i++){
             res.push(await getRecipeDetails( randoms.data["recipes"][i].id))
         }  
+        console.log(res)
         return ShowRecipe(res)
 
 
@@ -58,6 +59,7 @@ async function getRandomRecipes() {
 
 function ShowRecipe(recipes) {
 return recipes.map((recipe) => {
+    
         const {
             id,
             title,
@@ -111,23 +113,42 @@ async function getAllRecipesPreview(ids) {
 }
 
 
-async function searchRecipes(req, query, number, cuisine, diet, intolerances) {
+async function searchRecipes(req, query, return_num, cuisine, diet, intolerances) {
+    if(!return_num){
+        return_num = 5 //by deafult
+    }
     let res = await axios.get(`${api_domain}/complexSearch`,
     {
         params: {
+            user_id: req.session.user_id,
             apiKey: process.env.spooncular_apiKey,
             query: query, 
-            number: number,
+            number: return_num,
             cuisine: cuisine, 
             diet: diet,
             intolerances: intolerances,
             instructionsRequired: true,
-            addRecipeInformation: true,
+            addRecipeInformation: true
         },
-    })
+        
 
-    
-    return res.data
+    });
+
+    return res
+//     console.log("res")
+//     console.log(res.data.results)
+//     ids_of_recipes_return = [];
+//     // res.forEach(element => {
+//     //     ids_of_recipes_return.push(element.id)
+//     // })
+//     // for (let i=0; i<res.length; i++)
+//     // ids_of_recipes_return.push(res.data.results[i].id);
+     
+//     console.log(ids_of_recipes_return)
+//     ids_of_recipes_return.forEach(element => {
+//         return getRecipeDetails(element)
+//     });
+//   //  return getRecipeDetails(ids_of_recipes_return)
 
 }
 

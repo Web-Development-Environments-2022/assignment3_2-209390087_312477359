@@ -26,8 +26,9 @@ CREATE TABLE `recipe` (
   `PersonalRecipe` tinyint(1) DEFAULT NULL,
   `instructions` text,
   `extended_ingredients` text,
+  `WhenPreparedInFamily` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3
 
 
 
@@ -43,4 +44,13 @@ CREATE TABLE `watchedrecipes` (
   `recipe_id` int NOT NULL,
   PRIMARY KEY (`user_id`,`recipe_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
+
+CREATE TABLE SearchRecipes(
+    user_id int NOT NULL PRIMARY KEY,
+    query_to_search VARCHAR(255),
+    cuisine VARCHAR(255),
+    diet VARCHAR(255),
+    intolerances VARCHAR(255),
+    return_num int 
+) DEFAULT CHARSET UTF8;
 
