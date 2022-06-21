@@ -23,14 +23,13 @@ async function getWatchedRecipes(user_id){
 
 
 //add personal recipe:
-async function addNEwRecipe(title,image,popularity,glutenFree,vegan,vegetarian,servings,recipeOwner,ready_in_minutes,user_id,number_of_servings,FamilyRecipe,PersonalRecipe,instructions,extended_ingredients){
-
-    if(title==undefined || image==undefined || popularity==undefined || glutenFree==undefined || vegan==undefined || vegetarian==undefined || servings==undefined || recipeOwner==undefined || ready_in_minutes==undefined  || number_of_servings==undefined  || instructions==undefined  || extended_ingredients==undefined ){
+async function addNEwRecipe(title,image,popularity,glutenFree,vegan,vegetarian,servings,recipeOwner,ready_in_minutes,user_id,FamilyRecipe,PersonalRecipe,instructions,extended_ingredients){
+    id = 0;
+    if(title==undefined || image==undefined || popularity==undefined || glutenFree==undefined || vegan==undefined || vegetarian==undefined || servings==undefined || recipeOwner==undefined || ready_in_minutes==undefined   || instructions==undefined  || extended_ingredients==undefined ){
         throw { status: 422, message: "There is a Missing Value!" }; 
     }
     else{
-       id++;
-        await DButils.execQuery(`insert into mydb.recipe values ('${++id}','${id}','${title}','${image}','${popularity}','${glutenFree}','${vegan}','${vegetarian}','${servings}','${recipeOwner}','${ready_in_minutes}','${user_id}' ,'${number_of_servings}','${FamilyRecipe}','${PersonalRecipe}','${instructions}','${extended_ingredients}')`);
+        await DButils.execQuery(`insert into mydb.recipe values (NULL,'${title}','${image}','${popularity}','${glutenFree}','${vegan}','${vegetarian}','${servings}','${recipeOwner}','${ready_in_minutes}','${user_id}','${FamilyRecipe}','${PersonalRecipe}','${instructions}','${extended_ingredients}')`);
     }
 }
 async function getPersonalRecipes(user_id,PersonalRecipe){
