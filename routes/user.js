@@ -82,13 +82,9 @@ router.post('/personal', async (req,res,next) => {
  router.get('/personal', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-
     const recipes_id = await user_utils.getPersonalRecipes(user_id,1);
-    // const my_recipes = recipes_id;
-    let recipes_id_array = [];
-    recipes_id.map((element) => recipes_id_array.push(element.id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipesPreview(recipes_id_array);
-    res.status(200).send(results);
+    let ans = await user_utils.returnPersonalRecipes(recipes_id);
+    res.status(200).send(ans);
   } catch(error){
     next(error); 
   }
@@ -123,22 +119,8 @@ router.post('/family', async (req,res,next) => {
 router.get('/family', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-
     const recipes_id = await user_utils.getFamilyRecipes(user_id,1);
-    console.log(recipes_id)
-    console.log("recipes_id")
     let ans = await user_utils.returnFamilyRecipes(recipes_id);
-    console.log(ans)
-    console.log("ans")
-    // const my_recipes = recipes_id;
-  //   let recipes_id_array = [];
-  //   recipes_id.map((element) => recipes_id_array.push(element.id)); //extracting the recipe ids into array
-  //   //const results = await recipe_utils.getFamilyRecipes(recipes_id_array);
-  //   for (let i =0; i<recipes_id_array.length; i++){
-
-  //   }
-  //     return await DButils.execQuery(query);
-  // }
     res.status(200).send(ans);
   } catch(error){
     next(error); 

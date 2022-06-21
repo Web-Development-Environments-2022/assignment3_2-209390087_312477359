@@ -54,6 +54,16 @@ async function returnFamilyRecipes(recipesId){
     }
     return ans;
 }
+
+async function returnPersonalRecipes(recipesId){
+    ans = []
+    for (let i=0; i<recipesId.length; i++){
+        toAdd = await DButils.execQuery(`select title,popularity,servings,recipeOwner,ready_in_minutes,instructions, extended_ingredients,image from mydb.recipe where id='${recipesId[i].id}';`)
+        console.log(toAdd)
+        ans.push(toAdd);
+    }
+    return ans;
+}
 //add recipe to family recipes-get
 
 
@@ -68,3 +78,4 @@ exports.get3LastWatched=get3LastWatched;
 exports.getFamilyRecipes=getFamilyRecipes;
 exports.getPersonalRecipes=getPersonalRecipes;
 exports.returnFamilyRecipes=returnFamilyRecipes;
+exports.returnPersonalRecipes=returnPersonalRecipes;
